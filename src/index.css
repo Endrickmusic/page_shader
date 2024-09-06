@@ -1,7 +1,30 @@
+/* open-sans-condensed-300 - latin */
+@font-face {
+  font-family: "Open Sans Condensed";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/open-sans-condensed-v14-latin-300.eot"); /* IE9 Compat Modes */
+  src: local("Open Sans Condensed Light"), local("OpenSansCondensed-Light"),
+    url("../fonts/open-sans-condensed-v14-latin-300.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("../fonts/open-sans-condensed-v14-latin-300.woff2")
+      format("woff2"),
+    /* Super Modern Browsers */
+      url("../fonts/open-sans-condensed-v14-latin-300.woff") format("woff"),
+    /* Modern Browsers */ url("../fonts/open-sans-condensed-v14-latin-300.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("../fonts/open-sans-condensed-v14-latin-300.svg#OpenSansCondensed")
+      format("svg"); /* Legacy iOS */
+}
+
+/* Ensures that all elements are sized based on their border-box, 
+   meaning padding and border are included in the element's total width and height */
 * {
   box-sizing: border-box;
 }
 
+/* Ensures the html, body, and root element take up the full width and height of the viewport */
 html,
 body,
 #root {
@@ -9,8 +32,30 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Prevents scrolling, useful when you have a full-screen canvas */
 }
 
+/* Styling for the body */
 body {
-  background: #ccc;
+  background-color: #ccc; /* Sets a gray background */
+  display: flex; /* Enables flexbox layout */
+  justify-content: center; /* Centers the content horizontally */
+  align-items: center; /* Centers the content vertically */
+}
+
+/* Styles for the canvas, ensuring it covers the entire viewport */
+canvas {
+  position: absolute; /* Places the canvas on top of other elements */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Sets the width to cover the entire viewport */
+  height: 100vh; /* Sets the height to cover the entire viewport */
+  pointer-events: none; /* Allows interactions with elements below the canvas */
+  background-color: transparent; /* Makes the canvas background transparent */
+  z-index: 1; /* Ensures the canvas stays behind other content */
+}
+
+#child {
+  position: absolute;
+  z-index: 2;
 }
