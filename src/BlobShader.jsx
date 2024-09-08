@@ -10,7 +10,7 @@ import { useRef, useMemo, useEffect, useCallback } from "react"
 import { useControls } from "leva"
 
 import vertexShader from "./shaders/vertexShader.js"
-import fragmentShader from "./shaders/camFragmentShader.js"
+import fragmentShader from "./shaders/fragmentShader.js"
 import { Vector2, Vector3, MathUtils } from "three"
 
 export default function Shader({ map }) {

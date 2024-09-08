@@ -28,7 +28,7 @@ const float HALF_PI = 0.5*PI;
 const float TWO_PI = 2.0*PI;
 const int LOOP = 16;
 
-#define MAX_STEPS 200
+#define MAX_STEPS 50
 
 float hash(in float v) { return fract(sin(v)*43237.5324); }
 vec3 hash3(in float v) { return vec3(hash(v), hash(v*99.), hash(v*9999.)); }
@@ -40,10 +40,10 @@ float sphere(in vec3 p, in float r) {
 
     // texture displacement
     // vec2 uv = vec2(atan(p.x, p.z) / TWO_PI, p.y / 5.);
-    vec2 uv = vec2(0.5 + atan(p.z, p.x) / (2.0 * PI), 0.5 - asin(p.y) / PI);
-    float noise = texture2D(uNoiseTexture, uv).r;
-    float displacement = sin(p.x * 3.0 + uTime * 5. + noise) * 0.3;
-    displacement *= smoothstep(0.8, -0.8, p.y); // reduce displacement at the poles
+    // vec2 uv = vec2(0.5 + atan(p.z, p.x) / (2.0 * PI), 0.5 - asin(p.y) / PI);
+    // float noise = texture2D(uNoiseTexture, uv).r;
+    // float displacement = sin(p.x * 3.0 + uTime * 5. + noise) * 0.3;
+    // displacement *= smoothstep(0.8, -0.8, p.y); // reduce displacement at the poles
     // d += displacement;
 
     return d;
@@ -57,11 +57,11 @@ float opSmoothUnion( float d1, float d2, float k ) {
 #define BALL_NUM 5
 
 float map(in vec3 p) {
-  float res = 1e5;
+  float res = 1e2;
   for(int i=0; i<BALL_NUM; i++) {
     float fi = float(i) + 1.;
-    float r = uSize + 0.8 * hash(fi);
-    vec3 offset = 1.1 * sin(hash3(fi) * uTime);
+    float r = uSize + 0.4 * hash(fi);
+    vec3 offset = 0.78 * sin(hash3(fi) * uTime);
     res = opSmoothUnion(res, sphere(p-offset, r), 0.75);
   }
   return res;
