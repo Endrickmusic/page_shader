@@ -2,7 +2,6 @@ import { Canvas, useThree, useFrame, createPortal } from "@react-three/fiber"
 import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 import { Text, useFBO } from "@react-three/drei"
-import html2canvas from "html2canvas"
 
 import BlobShader from "./BlobShader"
 import "./index.css"
@@ -12,8 +11,8 @@ function InteractiveLink({ url, text, position }) {
 
   return (
     <Text
-      fontSize={0.1}
-      color={hovered ? "yellow" : "white"}
+      fontSize={0.2}
+      color={hovered ? "yellow" : "black"}
       position={position}
       onClick={() => window.open(url, "_blank")}
       onPointerOver={() => setHovered(true)}
@@ -26,23 +25,23 @@ function InteractiveLink({ url, text, position }) {
   )
 }
 
-function GradientBackground() {
-  // Create a blue to yellow gradient texture
+function GradientBackground({ width, height, color1, color2 }) {
+  // Create a left-to-right gradient texture
   const canvas = document.createElement("canvas")
-  canvas.width = 1
-  canvas.height = 256
+  canvas.width = 256
+  canvas.height = 1
   const ctx = canvas.getContext("2d")
-  const gradient = ctx.createLinearGradient(0, 0, 0, 256)
-  gradient.addColorStop(0, "blue")
-  gradient.addColorStop(1, "yellow")
+  const gradient = ctx.createLinearGradient(0, 0, 256, 0)
+  gradient.addColorStop(0, color1)
+  gradient.addColorStop(1, color2)
   ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, 1, 256)
+  ctx.fillRect(0, 0, 256, 1)
   const texture = new THREE.CanvasTexture(canvas)
 
   return (
     <mesh>
-      <planeGeometry args={[2, 5]} position={[0, 0, -0.1]} />
-      <meshBasicMaterial attach="material" map={texture} />
+      <planeGeometry args={[width, height]} position={[0, 0, -1]} />
+      <meshBasicMaterial map={texture} />
     </mesh>
   )
 }
@@ -50,7 +49,8 @@ function GradientBackground() {
 function Buffer({ children, ...props }) {
   const planeRef = useRef()
   const buffer = useFBO()
-  const viewport = useThree((state) => state.viewport)
+  const { viewport } = useThree()
+
   const [scene] = useState(() => new THREE.Scene())
 
   useFrame((state) => {
@@ -70,7 +70,8 @@ function Buffer({ children, ...props }) {
       {createPortal(children, scene)}
 
       <mesh ref={planeRef}>
-        <planeGeometry args={[3, 3]} /> {/* Plane with 3x3 units*/}
+        <planeGeometry args={[viewport.width, viewport.height]} />{" "}
+        {/* Plane with 3x3 units*/}
         <meshBasicMaterial side={THREE.DoubleSide} map={buffer.texture} />
         {/* Apply the FBO texture */}
       </mesh>
@@ -85,7 +86,22 @@ export default function App() {
       <Canvas shadows camera={{ position: [0, 0, 4], fov: 40 }}>
         <Buffer>
           {/* Gradient background */}
-          <GradientBackground />
+          {/* Full-screen background with black to white gradient (left to right) */}
+          <GradientBackground
+            width={24}
+            height={10}
+            color1="black"
+            color2="white"
+            font={"/fonts/Open_Sans_Condensed_Light_Regular.json"}
+          />
+
+          {/* Smaller gradient background (blue to yellow) behind the links */}
+          <GradientBackground
+            width={1.4}
+            height={1.7}
+            color1="blue"
+            color2="yellow"
+          />
 
           {/* List of Links */}
           <InteractiveLink
@@ -121,8 +137,8 @@ export default function App() {
 
           {/* Newsletter */}
           <Text
-            fontSize={0.1}
-            color="white"
+            fontSize={0.2}
+            color="black"
             position={[0, -0.6, 0]}
             anchorX="center"
             anchorY="middle"
