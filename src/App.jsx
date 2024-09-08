@@ -1,11 +1,33 @@
-import { Canvas } from "@react-three/fiber"
-import { Environment } from "@react-three/drei"
+import { Canvas, useThree, useFrame } from "@react-three/fiber"
+import { useEffect, useRef, useState } from "react"
+import * as THREE from "three"
+import html2canvas from "html2canvas"
 
+import BlobShader from "./BlobShader"
 import "./index.css"
 
-import Experience from "./Experience"
+function HtmlTexture({ htmlContent, setTexture }) {
+  useEffect(() => {
+    const renderHtmlToTexture = async () => {
+      const element = document.getElementById("child")
+      if (element) {
+        const canvas = await html2canvas(element)
+        const texture = new THREE.CanvasTexture(canvas)
+        texture.needsUpdate = true
+        setTexture(texture)
+      }
+    }
+
+    renderHtmlToTexture() // Trigger the texture update when the content changes
+  }, [htmlContent, setTexture]) // Depend on `htmlContent` changes
+
+  return null
+}
 
 export default function App() {
+  const textureRef = useRef()
+  const [htmlContent, setHtmlContent] = useState("initial") // Track HTML content change
+
   return (
     <>
       <div id="child">
@@ -48,10 +70,18 @@ export default function App() {
         </ul>
       </div>
 
+      <button onClick={() => setHtmlContent("updated")}>
+        Update HTML Content
+      </button>
+
       <Canvas shadows camera={{ position: [0, 0, 4], fov: 40 }}>
-        <Environment files="./textures/envmap.hdr" />
-        <color attach="background" args={["#eeeeee"]} />
-        <Experience />
+        {/* Render the HTML as a texture */}
+        <HtmlTexture
+          htmlContent={htmlContent}
+          setTexture={(texture) => (textureRef.current = texture)}
+        />
+        {/* Pass the texture to the shader */}
+        {textureRef.current && <BlobShader map={textureRef.current} />}
       </Canvas>
     </>
   )
