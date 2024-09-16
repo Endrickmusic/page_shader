@@ -1,7 +1,7 @@
 import { useCubeTexture, useTexture, useFBO } from "@react-three/drei"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useRef, useMemo, useEffect, useCallback } from "react"
-import { useControls } from "leva"
+import { useControls, Leva } from "leva"
 import vertexShader from "./shaders/vertexShader.js"
 import fragmentShader from "./shaders/fragmentShader.js"
 import { Vector2, Vector3, MathUtils } from "three"
@@ -112,14 +112,18 @@ export default function Shader({ map }) {
   )
 
   return (
-    <mesh ref={meshRef} scale={[nearPlaneWidth, nearPlaneHeight, 1]}>
-      <planeGeometry args={[1, 1]} />
-      <shaderMaterial
-        uniforms={uniforms}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        transparent={true}
-      />
-    </mesh>
+    <>
+      <Leva hidden />
+
+      <mesh ref={meshRef} scale={[nearPlaneWidth, nearPlaneHeight, 1]}>
+        <planeGeometry args={[1, 1]} />
+        <shaderMaterial
+          uniforms={uniforms}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          transparent={true}
+        />
+      </mesh>
+    </>
   )
 }

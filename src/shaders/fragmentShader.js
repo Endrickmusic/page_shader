@@ -26,9 +26,9 @@ varying vec3 worldNormal;
 const float PI = 3.14159265359;
 const float HALF_PI = 0.5*PI;
 const float TWO_PI = 2.0*PI;
-const int LOOP = 16;
+const int LOOP = 32;
 
-#define MAX_STEPS 50
+#define MAX_STEPS 100
 
 float hash(in float v) { return fract(sin(v)*43237.5324); }
 vec3 hash3(in float v) { return vec3(hash(v), hash(v*99.), hash(v*9999.)); }

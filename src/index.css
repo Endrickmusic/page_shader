@@ -1,6 +1,7 @@
 /* open-sans-condensed-300 - latin */
 @font-face {
-  font-family: "Open Sans Condensed";
+  /* font-family: "Open Sans Condensed", Arial, sans-serif; */
+  font-family: Arial, sans-serif;
   font-style: normal;
   font-weight: 300;
   src: url("../fonts/open-sans-condensed-v14-latin-300.eot"); /* IE9 Compat Modes */
@@ -22,6 +23,8 @@
    meaning padding and border are included in the element's total width and height */
 * {
   box-sizing: border-box;
+  /* font-family: "Open Sans Condensed", sans-serif !important; */
+  font-family: Arial, "Open Sans Condensed", sans-serif !important;
 }
 
 /* Ensures the html, body, and root element take up the full width and height of the viewport */
@@ -58,7 +61,7 @@ canvas {
 /* Desktop styles (default) */
 
 ul {
-  font-size: 27px;
+  font-size: 18px;
   padding: 2%;
   margin: 16% auto;
 }
@@ -71,7 +74,7 @@ ul {
 /* Mobile styles */
 @media (max-width: 750px) {
   ul {
-    font-size: 30px;
+    font-size: 18px;
     padding: 5%;
     margin: 20% auto;
   }

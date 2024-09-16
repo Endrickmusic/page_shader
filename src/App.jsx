@@ -13,6 +13,9 @@ import { Text, useFBO } from "@react-three/drei"
 import BlobShader from "./BlobShader"
 import "./index.css"
 
+// Import the JSON font file
+// import sans from "/fonts/Open_Sans_Condensed_Light_Regular.json"
+
 const InteractiveLink = React.memo(({ url, text, position }) => {
   const [hovered, setHovered] = useState(false)
 
@@ -22,7 +25,8 @@ const InteractiveLink = React.memo(({ url, text, position }) => {
 
   return (
     <Text
-      fontSize={0.2}
+      font="/fonts/open-sans-condensed-v14-latin-300.woff"
+      fontSize={0.17}
       color={hovered ? "yellow" : "black"}
       position={position}
       onClick={handleClick}
@@ -87,21 +91,21 @@ const links = [
   {
     url: "https://www.youtube.com/watch?v=QXb8siKy3dc&feature=youtu.be",
     text: "Youtube",
-    y: 0.6,
+    y: 0.5,
   },
   {
     url: "https://open.spotify.com/artist/3zTm668ZXG1rJzFN3puF6y?si=FSvv5fUSRFGnZfstDsj_4Q",
     text: "Spotify",
-    y: 0.4,
+    y: 0.3,
   },
   {
     url: "https://www.instagram.com/end_rick/?hl=de",
     text: "Instagram",
-    y: 0.2,
+    y: 0.1,
   },
-  { url: "https://endrick.bandcamp.com/releases", text: "Bandcamp", y: 0 },
-  { url: "mailto:mail@christianhohenbild.de", text: "Contact", y: -0.2 },
-  { url: "about.htm", text: "About", y: -0.4 },
+  { url: "https://endrick.bandcamp.com/releases", text: "Bandcamp", y: -0.1 },
+  { url: "mailto:mail@christianhohenbild.de", text: "Contact", y: -0.3 },
+  { url: "about.htm", text: "About", y: -0.5 },
 ]
 
 export default function App() {
@@ -109,21 +113,21 @@ export default function App() {
     <Canvas shadows camera={{ position: [0, 0, 4], fov: 40 }}>
       <Buffer>
         <GradientBackground
-          width={24}
+          width={6}
           height={10}
           color1="black"
           color2="white"
         />
         <GradientBackground
-          width={1.4}
-          height={1.7}
-          color1="blue"
-          color2="yellow"
+          width={1.2}
+          height={1.4}
+          color1="#FFD500"
+          color2="#0000FF"
         />
         {links.map((link, index) => (
           <InteractiveLink key={index} {...link} position={[0, link.y, 0]} />
         ))}
-        <Text
+        {/* <Text
           fontSize={0.2}
           color="black"
           position={[0, -0.6, 0]}
@@ -131,7 +135,7 @@ export default function App() {
           anchorY="middle"
         >
           Newsletter
-        </Text>
+        </Text> */}
       </Buffer>
     </Canvas>
   )
