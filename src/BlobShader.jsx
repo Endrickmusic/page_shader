@@ -100,6 +100,9 @@ export default function BlobShader({ map }) {
     meshRef.current.position.copy(cameraForwardPos)
     meshRef.current.rotation.copy(camera.rotation)
 
+    // Update mesh scale every frame
+    meshRef.current.scale.set(nearPlaneWidth, nearPlaneHeight, 1)
+
     shaderMaterial.uniforms.uCamPos.value.copy(camera.position)
     shaderMaterial.uniforms.uCamToWorldMat.value.copy(camera.matrixWorld)
     shaderMaterial.uniforms.uCamInverseProjMat.value.copy(
@@ -124,11 +127,11 @@ export default function BlobShader({ map }) {
       Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) *
       camera.aspect *
       2,
-    [camera]
+    [camera, viewport]
   )
   const nearPlaneHeight = useMemo(
     () => nearPlaneWidth / camera.aspect,
-    [nearPlaneWidth, camera]
+    [nearPlaneWidth, camera, viewport]
   )
 
   return (
