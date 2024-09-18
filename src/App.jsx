@@ -125,17 +125,24 @@ const ImprintText = () => {
   return (
     <Text
       font="/fonts/open-sans-condensed-v14-latin-300.woff"
-      fontSize={0.1}
-      maxWidth={viewport.width * 0.4}
+      fontSize={0.05}
+      maxWidth={viewport.width * 0.2}
       lineHeight={1.5}
       color="black"
       anchorX="center"
       anchorY="middle"
     >
-      {`Imprint / About
-Your imprint text goes here.
-You can include multiple lines of text.
-© 2023 Your Name/Company`}
+      {`Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:
+Christian Hohenbild
+Gleditschstr. 71
+0170 751 85 25
+post@endrick.de
+
+Streitschlichtung:
+Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+
+Haftung für Inhalte:
+Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.`}
     </Text>
   )
 }
