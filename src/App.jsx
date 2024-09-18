@@ -96,19 +96,19 @@ function Buffer({ children }) {
 
 const links = [
   {
-    url: "https://www.youtube.com/watch?v=QXb8siKy3dc&feature=youtu.be",
-    text: "Youtube",
+    url: "https://www.instagram.com/end_rick/?hl=de",
+    text: "Instagram",
     y: 0.5,
+  },
+  {
+    url: "https://www.youtube.com/@end_rick/shorts",
+    text: "Youtube",
+    y: 0.1,
   },
   {
     url: "https://open.spotify.com/artist/3zTm668ZXG1rJzFN3puF6y?si=FSvv5fUSRFGnZfstDsj_4Q",
     text: "Spotify",
     y: 0.3,
-  },
-  {
-    url: "https://www.instagram.com/end_rick/?hl=de",
-    text: "Instagram",
-    y: 0.1,
   },
   { url: "https://endrick.bandcamp.com/releases", text: "Bandcamp", y: -0.1 },
   { url: "mailto:mail@christianhohenbild.de", text: "Contact", y: -0.3 },
