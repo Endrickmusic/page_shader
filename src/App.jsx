@@ -126,9 +126,9 @@ const ImprintText = () => {
     <Text
       font="/fonts/open-sans-condensed-v14-latin-300.woff"
       fontSize={0.05}
-      maxWidth={viewport.width * 0.2}
+      maxWidth={viewport.width * 0.8}
       lineHeight={1.5}
-      color="black"
+      color="#000000"
       anchorX="center"
       anchorY="middle"
     >
@@ -150,7 +150,7 @@ Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf dies
 const BackLink = ({ onClick }) => (
   <InteractiveLink
     text="Back"
-    position={[0, -0.7, 0]}
+    position={[0, -0.75, 0]}
     url="#"
     onClick={onClick}
   />
