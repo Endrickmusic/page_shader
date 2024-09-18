@@ -122,11 +122,12 @@ const links = [
 ]
 const ImprintText = () => {
   const { viewport } = useThree()
+  const maxWidth = Math.max(viewport.width * 0.3, 1.2)
   return (
     <Text
       font="/fonts/open-sans-condensed-v14-latin-300.woff"
       fontSize={0.05}
-      maxWidth={viewport.width * 0.8}
+      maxWidth={maxWidth}
       lineHeight={1.5}
       color="#000000"
       anchorX="center"
