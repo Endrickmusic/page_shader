@@ -13,21 +13,27 @@ import { Text, useFBO } from "@react-three/drei"
 import BlobShader from "./BlobShader"
 import "./index.css"
 
-// Import the JSON font file
-// import sans from "/fonts/Open_Sans_Condensed_Light_Regular.json"
-
-const InteractiveLink = React.memo(({ url, text, position }) => {
+const InteractiveLink = React.memo(({ url, text, position, onClick }) => {
   const [hovered, setHovered] = useState(false)
-
   const handlePointerOver = useCallback(() => setHovered(true), [])
   const handlePointerOut = useCallback(() => setHovered(false), [])
-  const handleClick = useCallback(() => window.open(url, "_blank"), [url])
+  const handleClick = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (onClick) {
+        onClick()
+      } else if (url) {
+        window.open(url, "_blank")
+      }
+    },
+    [url, onClick]
+  )
 
   return (
     <Text
       font="/fonts/open-sans-condensed-v14-latin-300.woff"
-      fontSize={0.17}
-      color={hovered ? "yellow" : "black"}
+      fontSize={0.15}
+      color={hovered ? "#FFD500" : "#000000"}
       position={position}
       onClick={handleClick}
       onPointerOver={handlePointerOver}
@@ -114,8 +120,42 @@ const links = [
   { url: "mailto:mail@christianhohenbild.de", text: "Contact", y: -0.3 },
   { url: "about.htm", text: "About", y: -0.5 },
 ]
+const ImprintText = () => {
+  const { viewport } = useThree()
+  return (
+    <Text
+      font="/fonts/open-sans-condensed-v14-latin-300.woff"
+      fontSize={0.1}
+      maxWidth={viewport.width * 0.4}
+      lineHeight={1.5}
+      color="black"
+      anchorX="center"
+      anchorY="middle"
+    >
+      {`Imprint / About
+Your imprint text goes here.
+You can include multiple lines of text.
+© 2023 Your Name/Company`}
+    </Text>
+  )
+}
+
+const BackLink = ({ onClick }) => (
+  <InteractiveLink
+    text="Back"
+    position={[0, -0.7, 0]}
+    url="#"
+    onClick={onClick}
+  />
+)
 
 export default function App() {
+  const [showImprint, setShowImprint] = useState(false)
+
+  const toggleImprint = useCallback(() => {
+    setShowImprint((prev) => !prev)
+  }, [])
+
   return (
     <Canvas shadows camera={{ position: [0, 0, 4], fov: 40 }}>
       <Buffer>
@@ -125,26 +165,39 @@ export default function App() {
           scaleX={1}
           scaleY={1}
         />
-        <GradientBackground
-          color1="#FFD500"
-          color2="#0000FF"
-          scaleX={0.16}
-          scaleY={0.28}
-          minWidth={0.8} // Minimum width in Three.js units
-          minHeight={1.4} // Minimum height in Three.js units
-        />
-        {links.map((link, index) => (
-          <InteractiveLink key={index} {...link} position={[0, link.y, 0]} />
-        ))}
-        {/* <Text
-          fontSize={0.2}
-          color="black"
-          position={[0, -0.6, 0]}
-          anchorX="center"
-          anchorY="middle"
-        >
-          Newsletter
-        </Text> */}
+        {showImprint ? (
+          <>
+            <GradientBackground
+              color1="#EB34E1"
+              color2="#34EBA1"
+              scaleX={0.35}
+              scaleY={0.6}
+              minWidth={1.6}
+              minHeight={1.8}
+            />
+            <ImprintText />
+            <BackLink onClick={toggleImprint} />
+          </>
+        ) : (
+          <>
+            <GradientBackground
+              color1="#FFD500"
+              color2="#0000FF"
+              scaleX={0.14}
+              scaleY={0.28}
+              minWidth={0.8}
+              minHeight={1.4}
+            />
+            {links.map((link, index) => (
+              <InteractiveLink
+                key={index}
+                {...link}
+                position={[0, link.y, 0]}
+                onClick={link.text === "About" ? toggleImprint : undefined}
+              />
+            ))}
+          </>
+        )}
       </Buffer>
     </Canvas>
   )
