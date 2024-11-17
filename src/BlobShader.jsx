@@ -3,44 +3,25 @@ import { useFrame, useThree } from "@react-three/fiber"
 import { useCubeTexture, useTexture, useFBO } from "@react-three/drei"
 import { useControls, Leva } from "leva"
 import * as THREE from "three"
+import { Perf } from "r3f-perf"
 import vertexShader from "./shaders/vertexShader.js"
 import fragmentShader from "./shaders/fragmentShader.js"
-
-// Create shader material outside of component to prevent recompilation
-const shaderMaterial = new THREE.ShaderMaterial({
-  vertexShader,
-  fragmentShader,
-  transparent: true,
-  uniforms: {
-    uCamPos: { value: new THREE.Vector3() },
-    uCamToWorldMat: { value: new THREE.Matrix4() },
-    uCamInverseProjMat: { value: new THREE.Matrix4() },
-    uTime: { value: 0 },
-    uMouse: { value: new THREE.Vector2() },
-    uResolution: { value: new THREE.Vector2() },
-    uTexture: { value: null },
-    uNoiseTexture: { value: null },
-    iChannel0: { value: null },
-    uSpeed: { value: 0.5 },
-    uIOR: { value: 0.84 },
-    uCount: { value: 3 },
-    uReflection: { value: 1.5 },
-    uSize: { value: 0.005 },
-    uDispersion: { value: 0.03 },
-    uRefractPower: { value: 0.15 },
-    uChromaticAberration: { value: 0.5 },
-  },
-})
+import useShaderMaterial from "./hooks/useShaderMaterial"
 
 export default function BlobShader({ map }) {
   const meshRef = useRef()
   const buffer = useFBO()
   const { viewport, scene, camera, gl } = useThree()
 
+  const shaderMaterial = useShaderMaterial({ vertexShader, fragmentShader })
+
   const mousePosition = useRef({ x: 0, y: 0 })
 
   const updateMousePosition = useCallback((e) => {
-    mousePosition.current = { x: e.pageX, y: e.pageY }
+    mousePosition.current = {
+      x: (e.clientX / window.innerWidth) * 2 - 1,
+      y: -(e.clientY / window.innerHeight) * 2 + 1,
+    }
   }, [])
 
   const noiseTexture = useTexture("./textures/noise.png")
@@ -82,26 +63,21 @@ export default function BlobShader({ map }) {
   const mouseVector = useMemo(() => new THREE.Vector2(), [])
 
   useFrame((state) => {
-    const time = state.clock.getElapsedTime()
+    const { current: mesh } = meshRef
+    const { uniforms } = shaderMaterial
 
-    mouseVector.set(mousePosition.current.x, mousePosition.current.y)
-    shaderMaterial.uniforms.uMouse.value = mouseVector
-    shaderMaterial.uniforms.uTime.value = time * controls.speed
+    const time = state.clock.getElapsedTime() * controls.speed
+    uniforms.uTime.value = time
+    uniforms.uMouse.value.set(mousePosition.current.x, mousePosition.current.y)
 
-    Object.entries(controls).forEach(([key, value]) => {
-      const uniformName = `u${key.charAt(0).toUpperCase() + key.slice(1)}`
-      if (shaderMaterial.uniforms[uniformName]) {
-        shaderMaterial.uniforms[uniformName].value = value
-      }
-    })
+    camera
+      .getWorldDirection(cameraForwardPos)
+      .multiplyScalar(camera.near)
+      .add(camera.position)
 
-    camera.getWorldDirection(cameraForwardPos).multiplyScalar(camera.near)
-    cameraForwardPos.add(camera.position)
-    meshRef.current.position.copy(cameraForwardPos)
-    meshRef.current.rotation.copy(camera.rotation)
-
-    // Update mesh scale every frame
-    meshRef.current.scale.set(nearPlaneWidth, nearPlaneHeight, 1)
+    mesh.position.copy(cameraForwardPos)
+    mesh.rotation.copy(camera.rotation)
+    mesh.scale.set(nearPlaneWidth, nearPlaneHeight, 1)
 
     shaderMaterial.uniforms.uCamPos.value.copy(camera.position)
     shaderMaterial.uniforms.uCamToWorldMat.value.copy(camera.matrixWorld)
@@ -136,6 +112,7 @@ export default function BlobShader({ map }) {
 
   return (
     <>
+      <Perf position="top-left" minimal={false} className="stats" />
       <Leva hidden />
       <mesh ref={meshRef} scale={[nearPlaneWidth, nearPlaneHeight, 1]}>
         <planeGeometry args={[1, 1]} />

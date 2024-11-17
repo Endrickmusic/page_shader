@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-three/drei": "^9.105.6",
+    "@react-three/drei": "^9.117.0",
     "@react-three/fiber": "^8.16.3",
     "html2canvas": "^1.4.1",
     "leva": "^0.9.35",
@@ -25,6 +25,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "r3f-perf": "^7.2.3",
     "vite": "^5.2.0"
   }
 }

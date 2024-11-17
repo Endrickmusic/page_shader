@@ -26,9 +26,9 @@ varying vec3 worldNormal;
 const float PI = 3.14159265359;
 const float HALF_PI = 0.5*PI;
 const float TWO_PI = 2.0*PI;
-const int LOOP = 32;
+const int LOOP = 16;
 
-#define MAX_STEPS 100
+#define MAX_STEPS 50
 
 float hash(in float v) { return fract(sin(v)*43237.5324); }
 vec3 hash3(in float v) { return vec3(hash(v), hash(v*99.), hash(v*9999.)); }
@@ -62,7 +62,7 @@ float map(in vec3 p) {
     float fi = float(i) + 1.;
     float r = uSize + 0.4 * hash(fi);
     vec3 offset = 0.78 * sin(hash3(fi) * uTime);
-    res = opSmoothUnion(res, sphere(p-offset, r), 0.75);
+    res = opSmoothUnion(res, sphere(p-offset, r), 1.0);
   }
   return res;
 }
@@ -103,8 +103,8 @@ void main()
 
         float tmp = map(ro + rd * t);
         
-        if(tmp < 0.001 || tmm.y < t) break;
-        t += tmp * 0.7;
+        if(tmp < 0.002 || tmm.y < t) break;
+        t += tmp * 0.9;
     }
   
     if(tmm.y < t) {
